@@ -1,0 +1,15 @@
+{
+  "name": "railwayapp-mjml",
+  "version": "1.0.0",
+  "description": "MJML render service for Railway",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "packageManager": "pnpm@10.26.2",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mjml": "^4.15.3"
+  }
+}
