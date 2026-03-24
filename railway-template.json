@@ -6,6 +6,6 @@
   "displayName": "MJML Renderer API",
   "publishedCode": "mjml-renderer-api",
   "image": "https://raw.githubusercontent.com/vergissberlin/railwayapp-mjml/main/mjml.png",
-  "description": "Render MJML via REST and return production-ready responsive HTML.",
+  "description": "Render MJML via REST and return production-ready responsive HTML for Emails.",
   "workspaceAutomation": false
 }

@@ -1,8 +1,8 @@
 import express from "express";
 import mjml2html from "mjml";
+import { pathToFileURL } from "node:url";
 
-const app = express();
-const port = Number(process.env.PORT || 8080);
+export const app = express();
 
 app.use(express.json({ limit: "2mb" }));
 app.use(express.text({ type: ["text/plain", "text/mjml"], limit: "2mb" }));
@@ -32,11 +32,21 @@ app.post("/render", (req, res) => {
   }
 
   const options = typeof req.body === "object" && req.body?.options ? req.body.options : {};
-  const result = mjml2html(mjmlInput, {
-    keepComments: false,
-    validationLevel: "strict",
-    ...options,
-  });
+  let result;
+  try {
+    result = mjml2html(mjmlInput, {
+      keepComments: false,
+      validationLevel: "strict",
+      ...options,
+    });
+  } catch (err) {
+    res.status(422).json({
+      ok: false,
+      html: "",
+      errors: [{ message: err?.message || "MJML validation failed." }],
+    });
+    return;
+  }
 
   if (Array.isArray(result.errors) && result.errors.length > 0) {
     res.status(422).json({
@@ -53,6 +63,13 @@ app.post("/render", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`railwayapp-mjml listening on ${port}`);
-});
+export function startServer(port = Number(process.env.PORT || 8080)) {
+  return app.listen(port, () => {
+    console.log(`railwayapp-mjml listening on ${port}`);
+  });
+}
+
+const isMainModule = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isMainModule) {
+  startServer();
+}
