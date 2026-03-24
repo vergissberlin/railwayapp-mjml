@@ -6,6 +6,8 @@ Deploy an MJML rendering API on Railway. Send MJML via REST and receive compiled
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template)
 
+Releases are automated with [release-please](https://github.com/googleapis/release-please): merge Conventional Commit messages on `main`, then merge the release PR it opens. Tags look like `railwayapp-mjml-v1.2.3` (`include-component-in-tag`).
+
 ## Endpoints
 
 - `GET /` — JSON metadata (`ok`, `service`, `mjmlVersion`)
