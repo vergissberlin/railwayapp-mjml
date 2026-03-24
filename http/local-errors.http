@@ -1,0 +1,39 @@
+# Error-path smoke tests — local API
+# Expect 4xx responses; useful to verify error JSON shape
+@baseUrl = http://127.0.0.1:8080
+
+### 400 — empty JSON body (no mjml)
+POST {{baseUrl}}/render
+Content-Type: application/json
+
+{}
+
+### 400 — whitespace-only MJML (text/plain)
+POST {{baseUrl}}/render
+Content-Type: text/plain
+
+   
+
+### 415 — unsupported media type
+POST {{baseUrl}}/render
+Content-Type: application/octet-stream
+
+not mjml
+
+### 422 — invalid MJML structure (compile/validation failure)
+POST {{baseUrl}}/render
+Content-Type: application/json
+
+{
+  "mjml": "<mjml><mj-body><mj-text>mj-text not allowed here</mj-text></mj-body></mjml>"
+}
+
+### 401 — only when MJML_API_TOKEN is set and header wrong/missing
+# Expect 401 if token is configured; otherwise skip or expect 200
+POST {{baseUrl}}/render
+Content-Type: application/json
+Authorization: Bearer wrong-token
+
+{
+  "mjml": "<mjml><mj-body><mj-section><mj-column><mj-text>Hi</mj-text></mj-column></mj-section></mj-body></mjml>"
+}

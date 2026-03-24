@@ -8,12 +8,54 @@ Deploy an MJML rendering API on Railway. Send MJML via REST and receive compiled
 
 ## Endpoints
 
-- `GET /health` -> returns `ok`
-- `POST /render` -> renders MJML to HTML
+- `GET /` — JSON metadata (`ok`, `service`, `mjmlVersion`)
+- `GET /health` — JSON `{ "ok": true }` for probes
+- `POST /render` — render MJML to HTML (legacy path)
+- `POST /v1/render` — same behavior as `POST /render` (versioned path)
+
+See [`openapi.yaml`](./openapi.yaml) for status codes, request/response shapes, and examples.
+
+### Success response (`200`)
+
+```json
+{
+  "ok": true,
+  "html": "<!doctype html>…",
+  "mjmlVersion": "4.18.0"
+}
+```
+
+### Error response (`4xx` / `5xx`)
+
+Errors always use this shape:
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "MISSING_MJML",
+    "message": "Request body must contain MJML (text/xml body or JSON with `mjml`).",
+    "details": {}
+  }
+}
+```
+
+`details` is omitted when empty. Common codes: `MISSING_CONTENT_TYPE`, `MISSING_MJML`, `UNAUTHORIZED`, `UNSUPPORTED_MEDIA_TYPE`, `PAYLOAD_TOO_LARGE`, `RATE_LIMITED`, `MJML_COMPILE_FAILED`, `MJML_VALIDATION_FAILED`, `INTERNAL_ERROR`.
+
+### Request correlation
+
+Send `X-Request-Id` on render requests; the same value is echoed on the response. If omitted, the server generates a UUID.
 
 ## Request Format
 
-You can send either plain text MJML:
+Supported `Content-Type` values for `POST /render` and `POST /v1/render`:
+
+- `application/json` — body `{ "mjml": "<mjml>…</mjml>", "options": { … } }` (`options` is optional and allowlisted)
+- `text/plain`, `text/mjml`, `application/xml`, `text/xml` — raw MJML string as the body
+
+Other media types receive **415 Unsupported Media Type**. The `Content-Type` header is required (otherwise **400**).
+
+You can send plain text MJML:
 
 ```bash
 curl -X POST http://localhost:8080/render \
@@ -29,13 +71,79 @@ curl -X POST http://localhost:8080/render \
   -d '{"mjml":"<mjml><mj-body><mj-section><mj-column><mj-text>Hello</mj-text></mj-column></mj-section></mj-body></mjml>"}'
 ```
 
+or XML media types (same body as plain MJML):
+
+```bash
+curl -X POST http://localhost:8080/render \
+  -H "Content-Type: application/xml" \
+  --data '<mjml><mj-body><mj-section><mj-column><mj-text>Hello</mj-text></mj-column></mj-section></mj-body></mjml>'
+```
+
 ## Environment
 
-| Variable | Description                      |
-|----------|----------------------------------|
-| `PORT`   | Service port, defaults to `8080` |
+| Variable | Description |
+|----------|-------------|
+| `PORT` | Service port, defaults to `8080` |
+| `MAX_BODY_BYTES` | Max request body size for JSON/text parsers (default `2097152`) |
+| `ALLOW_CLIENT_MJML_OPTIONS` | When `false`, client `options` in JSON are ignored (default `true`) |
+| `MJML_API_TOKEN` | If set, `POST /render` and `POST /v1/render` require `Authorization: Bearer <token>` |
+| `CORS_ORIGIN` | If set, enables CORS for that origin (browser clients). Omit for server-to-server only |
+| `TRUST_PROXY` | Set to `1` or `true` when the app sits behind a reverse proxy (Railway, load balancer) so `express-rate-limit` uses the real client IP from `X-Forwarded-For`. Omit in local dev with direct `curl` |
+| `RATE_LIMIT_MAX` | If set to a positive integer, limits each client key (default: IP) to that many `POST /render` and `POST /v1/render` requests per window. Unset or `0` disables in-process limiting |
+| `RATE_LIMIT_WINDOW_MS` | Window for `RATE_LIMIT_MAX` in milliseconds (default `60000`) |
+
+## Rate limiting
+
+MJML rendering is CPU-heavy; public endpoints should always have **some** protection.
+
+### Built-in (optional)
+
+The service ships with [`express-rate-limit`](https://github.com/express-rate-limit/express-rate-limit) for **`POST /render`** and **`POST /v1/render`** only.
+
+- Set **`RATE_LIMIT_MAX`** (e.g. `120`) and optionally **`RATE_LIMIT_WINDOW_MS`** (default one minute).
+- When the limit is exceeded, the API responds with **429** and JSON `{ "ok": false, "error": { "code": "RATE_LIMITED", ... } }`, plus a **`Retry-After`** header (seconds).
+- Set **`TRUST_PROXY=1`** on Railway (or any reverse proxy) so the client IP is taken from the forwarded headers; otherwise all traffic may look like one IP.
+- The default store is **in-memory**. Multiple replicas each get their own counter; for a shared global limit, use a **reverse proxy** or an external store (see the library docs).
+
+### Reverse proxy / edge (recommended for production)
+
+You can still (or instead) enforce limits **in front** of the container.
+
+**nginx** (example — tune `rate`/`burst` to your traffic):
+
+```nginx
+limit_req_zone $binary_remote_addr zone=mjml_render:10m rate=10r/s;
+
+server {
+  location /render {
+    limit_req zone=mjml_render burst=20 nodelay;
+    proxy_pass http://127.0.0.1:8080;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /v1/render {
+    limit_req zone=mjml_render burst=20 nodelay;
+    proxy_pass http://127.0.0.1:8080;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+```
+
+**Cloudflare** — Use [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/) (or custom WAF rules) on the path that fronts this API, scoped by IP, cookie, or header. Exact UI names vary; look under **Security** → **WAF** → **Rate limiting** in the Cloudflare dashboard.
+
+### Auth
+
+`MJML_API_TOKEN` does not replace rate limits but cuts down anonymous abuse.
 
 ## Local
+
+HTTP examples for the REST Client extension: [`http/local.http`](./http/local.http) and [`http/local-errors.http`](./http/local-errors.http).
 
 ```bash
 docker build -t railwayapp-mjml .

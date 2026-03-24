@@ -1,0 +1,385 @@
+openapi: 3.1.0
+info:
+  title: MJML Renderer API
+  version: 1.0.0
+  description: |
+    REST API that compiles MJML to HTML. Success and error responses use a consistent JSON envelope.
+
+    Optional in-process rate limiting: set `RATE_LIMIT_MAX` (see README). For stricter or multi-replica limits, use a reverse proxy or edge (nginx, Cloudflare, API gateway).
+
+    Example manual calls: see `http/local.http` and `http/local-errors.http` in this repository (REST Client).
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local (default PORT)
+  - url: http://localhost:8080
+    description: Local hostname alias
+
+tags:
+  - name: Metadata
+    description: Service discovery and health
+  - name: Render
+    description: MJML to HTML compilation
+
+paths:
+  /:
+    get:
+      tags:
+        - Metadata
+      summary: Service metadata
+      operationId: getRoot
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RootResponse"
+              example:
+                ok: true
+                service: railwayapp-mjml
+                mjmlVersion: "4.18.0"
+
+  /health:
+    get:
+      tags:
+        - Metadata
+      summary: Liveness / readiness probe
+      operationId: getHealth
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              example:
+                ok: true
+
+  /render:
+    post:
+      tags:
+        - Render
+      summary: Render MJML to HTML (legacy path)
+      operationId: postRender
+      parameters:
+        - $ref: "#/components/parameters/XRequestId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RenderJsonRequest"
+            examples:
+              minimal:
+                value:
+                  mjml: "<mjml><mj-body><mj-section><mj-column><mj-text>Hi</mj-text></mj-column></mj-section></mj-body></mjml>"
+              withOptions:
+                value:
+                  mjml: "<mjml><mj-body><mj-section><mj-column><mj-text>Hi</mj-text></mj-column></mj-section></mj-body></mjml>"
+                  options:
+                    validationLevel: strict
+                    minify: true
+          text/plain:
+            schema:
+              type: string
+            example: "<mjml><mj-body><mj-section><mj-column><mj-text>Hi</mj-text></mj-column></mj-section></mj-body></mjml>"
+          text/mjml:
+            schema:
+              type: string
+          application/xml:
+            schema:
+              type: string
+          text/xml:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Rendered HTML
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RenderSuccess"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          $ref: "#/components/responses/PayloadTooLarge"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaType"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /v1/render:
+    post:
+      tags:
+        - Render
+      summary: Render MJML to HTML (versioned path)
+      operationId: postV1Render
+      parameters:
+        - $ref: "#/components/parameters/XRequestId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RenderJsonRequest"
+          text/plain:
+            schema:
+              type: string
+          text/mjml:
+            schema:
+              type: string
+          application/xml:
+            schema:
+              type: string
+          text/xml:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Rendered HTML
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RenderSuccess"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          $ref: "#/components/responses/PayloadTooLarge"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaType"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        Optional. When the server is configured with `MJML_API_TOKEN`, send `Authorization: Bearer <token>`.
+        If the variable is unset, the API is open (no auth).
+
+  parameters:
+    XRequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Optional correlation id; echoed on the response as `X-Request-Id`. If omitted, a UUID is generated.
+
+  schemas:
+    RootResponse:
+      type: object
+      required: [ok, service, mjmlVersion]
+      properties:
+        ok:
+          type: boolean
+          const: true
+        service:
+          type: string
+        mjmlVersion:
+          type: string
+
+    HealthResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+          const: true
+
+    RenderJsonRequest:
+      type: object
+      required: [mjml]
+      properties:
+        mjml:
+          type: string
+        options:
+          type: object
+          description: |
+            Only a small allowlist of MJML options is accepted (`validationLevel`, `minify`, `minifyOptions`, `fonts`, `beautify`).
+            Ignored entirely when `ALLOW_CLIENT_MJML_OPTIONS=false`.
+
+    RenderSuccess:
+      type: object
+      required: [ok, html, mjmlVersion]
+      properties:
+        ok:
+          type: boolean
+          const: true
+        html:
+          type: string
+        mjmlVersion:
+          type: string
+
+    ApiError:
+      type: object
+      required: [ok, error]
+      properties:
+        ok:
+          type: boolean
+          const: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              examples:
+                - MISSING_CONTENT_TYPE
+                - MISSING_MJML
+                - UNAUTHORIZED
+                - UNSUPPORTED_MEDIA_TYPE
+                - PAYLOAD_TOO_LARGE
+                - MJML_COMPILE_FAILED
+                - MJML_VALIDATION_FAILED
+                - RATE_LIMITED
+                - INTERNAL_ERROR
+            message:
+              type: string
+            details:
+              description: Optional structured context (for example MJML engine errors).
+              type: object
+              additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Bad request (missing Content-Type, empty MJML, etc.)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          examples:
+            missingContentType:
+              value:
+                ok: false
+                error:
+                  code: MISSING_CONTENT_TYPE
+                  message: Content-Type header is required for POST render.
+            missingMjml:
+              value:
+                ok: false
+                error:
+                  code: MISSING_MJML
+                  message: Request body must contain MJML (text/xml body or JSON with `mjml`).
+
+    Unauthorized:
+      description: Bearer token missing or invalid (only when `MJML_API_TOKEN` is set)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            ok: false
+            error:
+              code: UNAUTHORIZED
+              message: "Valid Authorization: Bearer token required."
+
+    PayloadTooLarge:
+      description: Request body exceeds `MAX_BODY_BYTES`
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            ok: false
+            error:
+              code: PAYLOAD_TOO_LARGE
+              message: Request body exceeds configured limit.
+              details:
+                maxBodyBytes: 2097152
+
+    UnsupportedMediaType:
+      description: Content-Type is not one of the supported render types
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            ok: false
+            error:
+              code: UNSUPPORTED_MEDIA_TYPE
+              message: Unsupported Content-Type. Use application/json, text/plain, text/mjml, application/xml, or text/xml.
+              details:
+                contentType: application/octet-stream
+
+    UnprocessableEntity:
+      description: MJML failed to compile or failed validation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          examples:
+            compileFailed:
+              value:
+                ok: false
+                error:
+                  code: MJML_COMPILE_FAILED
+                  message: "Element mj-text doesn't exist or is not registered …"
+            validationFailed:
+              value:
+                ok: false
+                error:
+                  code: MJML_VALIDATION_FAILED
+                  message: MJML validation failed.
+                  details:
+                    mjmlErrors:
+                      - line: 1
+                        message: "…"
+
+    TooManyRequests:
+      description: In-process rate limit exceeded (`RATE_LIMIT_MAX`); includes Retry-After
+      headers:
+        Retry-After:
+          schema:
+            type: string
+          description: Seconds until the client may retry (aligned with the configured window)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            ok: false
+            error:
+              code: RATE_LIMITED
+              message: Too many render requests. Please retry later.
+              details:
+                retryAfterSeconds: 60
+                limit: 120
+
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          example:
+            ok: false
+            error:
+              code: INTERNAL_ERROR
+              message: An unexpected error occurred.

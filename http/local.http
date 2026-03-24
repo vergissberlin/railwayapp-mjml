@@ -1,0 +1,83 @@
+# MJML Renderer API — local requests
+# Requires: pnpm start (or node server.mjs) with default PORT=8080
+# VS Code / Cursor: REST Client extension (humao.rest-client)
+#
+# @baseUrl — change if you use another port (Railway: your public URL)
+@baseUrl = http://127.0.0.1:8080
+#
+# Set when the server has MJML_API_TOKEN; leave empty if auth is off
+@apiToken =
+
+### GET / — metadata (mjmlVersion, service name)
+GET {{baseUrl}}/
+
+### GET /health — probe
+GET {{baseUrl}}/health
+
+### POST /render — JSON body
+POST {{baseUrl}}/render
+Content-Type: application/json
+X-Request-Id: local-http-json-1
+
+{
+  "mjml": "<mjml><mj-body><mj-section><mj-column><mj-text>Hello from JSON</mj-text></mj-column></mj-section></mj-body></mjml>"
+}
+
+### POST /render — JSON with allowlisted options
+POST {{baseUrl}}/render
+Content-Type: application/json
+
+{
+  "mjml": "<mjml><mj-body><mj-section><mj-column><mj-text>Minified-ish</mj-text></mj-column></mj-section></mj-body></mjml>",
+  "options": {
+    "minify": true,
+    "validationLevel": "strict"
+  }
+}
+
+### POST /render — text/plain
+POST {{baseUrl}}/render
+Content-Type: text/plain
+
+<mjml><mj-body><mj-section><mj-column><mj-text>Hello plain</mj-text></mj-column></mj-section></mj-body></mjml>
+
+### POST /render — text/mjml
+POST {{baseUrl}}/render
+Content-Type: text/mjml
+
+<mjml><mj-body><mj-section><mj-column><mj-text>Hello text/mjml</mj-text></mj-column></mj-section></mj-body></mjml>
+
+### POST /render — application/xml
+POST {{baseUrl}}/render
+Content-Type: application/xml
+
+<mjml><mj-body><mj-section><mj-column><mj-text>Hello XML</mj-text></mj-column></mj-section></mj-body></mjml>
+
+### POST /render — text/xml
+POST {{baseUrl}}/render
+Content-Type: text/xml
+
+<mjml><mj-body><mj-section><mj-column><mj-text>Hello text/xml</mj-text></mj-column></mj-section></mj-body></mjml>
+
+### POST /v1/render — versioned path (same behaviour as /render)
+POST {{baseUrl}}/v1/render
+Content-Type: application/json
+
+{
+  "mjml": "<mjml><mj-body><mj-section><mj-column><mj-text>Hello v1</mj-text></mj-column></mj-section></mj-body></mjml>"
+}
+
+### POST /render — optional Bearer (set @apiToken at top when using MJML_API_TOKEN)
+POST {{baseUrl}}/render
+Content-Type: application/json
+Authorization: Bearer {{apiToken}}
+
+{
+  "mjml": "<mjml><mj-body><mj-section><mj-column><mj-text>Authed</mj-text></mj-column></mj-section></mj-body></mjml>"
+}
+
+### OPTIONS /render — CORS preflight (only relevant when CORS_ORIGIN is set on server)
+OPTIONS {{baseUrl}}/render
+Origin: http://localhost:5173
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type,authorization,x-request-id
