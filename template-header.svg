@@ -1,0 +1,19 @@
+<svg width="1200" height="360" viewBox="0 0 1200 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220" />
+      <stop offset="1" stop-color="#111827" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="360" rx="28" fill="url(#bg)" />
+  <rect x="72" y="108" width="280" height="72" rx="36" fill="#FF643F" />
+  <circle cx="430" cy="144" r="36" fill="#FF5A3C" />
+  <circle cx="116" cy="240" r="30" fill="#FF395E" />
+  <rect x="180" y="204" width="280" height="72" rx="36" fill="#FF643F" />
+  <text x="520" y="150" fill="#F9FAFB" font-family="Arial, Helvetica, sans-serif" font-size="56" font-weight="700">
+    MJML Renderer API
+  </text>
+  <text x="520" y="200" fill="#E5E7EB" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="400">
+    REST service to compile MJML into responsive HTML
+  </text>
+</svg>
