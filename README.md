@@ -1,5 +1,7 @@
 # MJML Renderer API for railway.app
 
+![MJML Logo](./mjml.png)
+
 Deploy an MJML rendering API on Railway. Send MJML via REST and receive compiled HTML.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template)

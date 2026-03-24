@@ -5,7 +5,7 @@
   "repo": "vergissberlin/railwayapp-mjml",
   "displayName": "MJML Renderer API",
   "publishedCode": "mjml-vb",
-  "image": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/mjml.svg",
+  "image": "https://raw.githubusercontent.com/vergissberlin/railwayapp-mjml/main/mjml.png",
   "description": "Render MJML via REST and return production-ready responsive HTML.",
   "workspaceAutomation": false
 }
