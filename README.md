@@ -8,6 +8,11 @@ Deploy an MJML rendering API on Railway. Send MJML via REST and receive compiled
 
 Releases are automated with [release-please](https://github.com/googleapis/release-please): merge Conventional Commit messages on `main`, then merge the release PR it opens. Tags look like `railwayapp-mjml-v1.2.3` (`include-component-in-tag`).
 
+**If the workflow fails with “not permitted to create or approve pull requests”:**
+
+1. In the repo: **Settings → Actions → General → Workflow permissions** — choose **Read and write permissions** and enable **Allow GitHub Actions to create and approve pull requests** (see [GitHub docs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)).
+2. Or add a repository secret **`RELEASE_PLEASE_TOKEN`**: a [classic personal access token](https://github.com/settings/tokens) with **`repo`** scope (for a bot or your user). The workflow uses it instead of `GITHUB_TOKEN` when the secret is set.
+
 ## Endpoints
 
 - `GET /` — JSON metadata (`ok`, `service`, `mjmlVersion`)

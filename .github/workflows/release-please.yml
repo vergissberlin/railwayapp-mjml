@@ -18,7 +18,9 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use github.token (not secrets.GITHUB_TOKEN — that is not set by GitHub).
+          # If the repo blocks GITHUB_TOKEN from opening PRs, add a classic PAT with repo scope as RELEASE_PLEASE_TOKEN.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           include-component-in-tag: true
