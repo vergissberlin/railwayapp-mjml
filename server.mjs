@@ -237,7 +237,7 @@ function extractMjmlInput(req) {
   return "";
 }
 
-function handleRender(req, res) {
+async function handleRender(req, res) {
   const started = Date.now();
   const requestId = req.requestId || "";
 
@@ -273,7 +273,7 @@ function handleRender(req, res) {
   const options = buildMjmlOptions(req.body);
   let result;
   try {
-    result = mjml2html(mjmlInput, options);
+    result = await mjml2html(mjmlInput, options);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     sendError(res, 422, "MJML_COMPILE_FAILED", message || "MJML compilation failed.");
