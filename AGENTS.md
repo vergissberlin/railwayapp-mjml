@@ -1,4 +1,14 @@
-# AGENT.md
+# AGENTS.md
+
+## Purpose
+This file defines template-specific agent conventions for this Railway app.
+
+## Scope
+These rules apply to `railwayapp-mjml`.
+The workspace root `AGENTS.md` also applies.
+
+## Conventions
+- Use Conventional Commits in English (for example: `feat:`, `fix:`, `docs:`, `chore:`).
 
 ## README Banner Rule
 
