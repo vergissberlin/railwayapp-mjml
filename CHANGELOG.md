@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.1](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.0...railwayapp-mjml-v1.1.1) (2026-07-31)
+
+
+### Chores
+
+* **deps:** update node.js to v24 ([727433e](https://github.com/vergissberlin/railwayapp-mjml/commit/727433ea14951e498a5c93836b5fe4b7754d6491))
+* **deps:** update node.js to v24 ([0c92bf9](https://github.com/vergissberlin/railwayapp-mjml/commit/0c92bf934eec09867dc4bbc2ecb516c907d2e68e))
+* **deps:** update pnpm to v11 ([213b37c](https://github.com/vergissberlin/railwayapp-mjml/commit/213b37c34f24b50b845594c1f0c6053f165315b2))
+* **deps:** update pnpm to v11 ([22f04f4](https://github.com/vergissberlin/railwayapp-mjml/commit/22f04f4b3ecd6fa9fd973bd78a7e4ec953748c32))
+
 ## [1.1.0](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.0.0...railwayapp-mjml-v1.1.0) (2026-07-28)
 
 
