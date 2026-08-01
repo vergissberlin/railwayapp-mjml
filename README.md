@@ -75,7 +75,7 @@ or JSON:
 ```bash
 curl -X POST http://localhost:8080/render \
   -H "Content-Type: application/json" \
-  -d '{"mjml":"<mjml><mj-body><mj-section><mj-column><mj-text>Hello</mj-text></mj-column></mj-section></mj-body></mjml>"}'
+  -d '{"mjml":"<mjml><mj-body><mj-section><mj-column><mj-text>Hello</mj-text></mj-column></mj-section></mj-body></mjml>'}'
 ```
 
 or XML media types (same body as plain MJML):
@@ -93,7 +93,7 @@ curl -X POST http://localhost:8080/render \
 | `PORT` | Service port, defaults to `8080` |
 | `MAX_BODY_BYTES` | Max request body size for JSON/text parsers (default `2097152`) |
 | `ALLOW_CLIENT_MJML_OPTIONS` | When `false`, client `options` in JSON are ignored (default `true`) |
-| `MJML_API_TOKEN` | If set, `POST /render` and `POST /v1/render` require `Authorization: Bearer <token>` |
+| `MJML_API_TOKEN` | If set, `POST /render` and `POST /v1/render` require `Authorization: Bearer <token>`. Recommended for production — set it in the Railway dashboard as a generated secret rather than leaving it empty |
 | `CORS_ORIGIN` | If set, enables CORS for that origin (browser clients). Omit for server-to-server only |
 | `TRUST_PROXY` | Set to `1` or `true` when the app sits behind a reverse proxy (Railway, load balancer) so `express-rate-limit` uses the real client IP from `X-Forwarded-For`. Omit in local dev with direct `curl` |
 | `RATE_LIMIT_MAX` | If set to a positive integer, limits each client key (default: IP) to that many `POST /render` and `POST /v1/render` requests per window. Unset or `0` disables in-process limiting |
