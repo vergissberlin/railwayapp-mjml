@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.2](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.1...railwayapp-mjml-v1.1.2) (2026-07-31)
+
+
+### Bug Fixes
+
+* dedupe footer marker and point deploy button at the published template code ([#13](https://github.com/vergissberlin/railwayapp-mjml/issues/13)) ([376e190](https://github.com/vergissberlin/railwayapp-mjml/commit/376e190021cff9d8a236be96d0fb9f655ab82693))
+
+
+### Documentation
+
+* rename AGENT.md to AGENTS.md, add conventional commits rule ([#15](https://github.com/vergissberlin/railwayapp-mjml/issues/15)) ([ca1f440](https://github.com/vergissberlin/railwayapp-mjml/commit/ca1f44097312e1de1a6aea5b6039beae11cf61f6))
+
 ## [1.1.1](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.0...railwayapp-mjml-v1.1.1) (2026-07-31)
 
 
