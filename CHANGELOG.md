@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.1.3](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.2...railwayapp-mjml-v1.1.3) (2026-08-20)
+
+
+### Bug Fixes
+
+* add missing MIT LICENSE file ([#20](https://github.com/vergissberlin/railwayapp-mjml/issues/20)) ([1882810](https://github.com/vergissberlin/railwayapp-mjml/commit/1882810bf715c404dc8fea2418dfb174d88798a2))
+
+
+### Documentation
+
+* add architecture diagram to README ([#19](https://github.com/vergissberlin/railwayapp-mjml/issues/19)) ([9748ecc](https://github.com/vergissberlin/railwayapp-mjml/commit/9748ecc3042c7df9de52e8b2cb027ddc53ad5117))
+* refresh shared template footer badges ([6a83270](https://github.com/vergissberlin/railwayapp-mjml/commit/6a83270ca58ceb9b37ef8aba56ecbf003113c50f))
+
+
+### Chores
+
+* **deps:** update dependency express-rate-limit to v8.6.2 ([376d4b6](https://github.com/vergissberlin/railwayapp-mjml/commit/376d4b67cb34ebe4ee64e2df00c9ebaead7b500d))
+* **deps:** update dependency express-rate-limit to v8.6.2 ([31e2814](https://github.com/vergissberlin/railwayapp-mjml/commit/31e2814e79ece66bc39d8da9702ee698a30c2d60))
+* **deps:** update pnpm to v11.21.0 ([68900b8](https://github.com/vergissberlin/railwayapp-mjml/commit/68900b8fa0be4aea400cccd880f31cefce2c41f7))
+* **deps:** update pnpm to v11.21.0 ([698dc0b](https://github.com/vergissberlin/railwayapp-mjml/commit/698dc0b6bcdafafdb747527b48f5c5eabdf50605))
+* update shared template footer ([b9ad556](https://github.com/vergissberlin/railwayapp-mjml/commit/b9ad5567122eff4443d5cd30b27616fc75df8f46))
+* update shared template footer ([99d1ab7](https://github.com/vergissberlin/railwayapp-mjml/commit/99d1ab7258620c045f42098c5452d60f33fb9e65))
+
 ## [1.1.2](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.1...railwayapp-mjml-v1.1.2) (2026-07-31)
 
 
