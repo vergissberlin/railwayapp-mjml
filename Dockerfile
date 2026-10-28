@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json ./
 
-RUN corepack enable && pnpm install --prod --no-frozen-lockfile
+RUN npm install -g corepack@latest && corepack enable && pnpm install --prod --no-frozen-lockfile
 
 COPY server.mjs ./
 
