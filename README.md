@@ -165,6 +165,10 @@ docker build -t railwayapp-mjml .
 docker run --rm -p 8080:8080 -e PORT=8080 railwayapp-mjml
 ```
 
+## 💬 Support
+
+Questions or feedback? Visit the [template forum on Railway Central Station](https://station.railway.com/templates/mjml-renderer-api-21a3915d).
+
 <!-- footer -->
 ---
 
