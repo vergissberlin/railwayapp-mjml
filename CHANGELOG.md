@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.1.4](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.3...railwayapp-mjml-v1.1.4) (2026-10-28)
+
+
+### Bug Fixes
+
+* **docker:** install corepack explicitly (no longer bundled with Node.js 25+) ([#36](https://github.com/vergissberlin/railwayapp-mjml/issues/36)) ([9bce1c8](https://github.com/vergissberlin/railwayapp-mjml/commit/9bce1c8acfe274c0959c41e38eee4e7fd2da0df8))
+
+
+### Documentation
+
+* add template forum link ([#32](https://github.com/vergissberlin/railwayapp-mjml/issues/32)) ([a763e59](https://github.com/vergissberlin/railwayapp-mjml/commit/a763e594ca9d4123ba99dcc9cb0542db3eb57aef))
+
+
+### Chores
+
+* **deps:** bump the npm_and_yarn group across 1 directory with 2 updates ([#34](https://github.com/vergissberlin/railwayapp-mjml/issues/34)) ([b933005](https://github.com/vergissberlin/railwayapp-mjml/commit/b933005ded5f3fb533fb57e4fc5fbdfc433ddbf4))
+* **deps:** update dependency compression to v1.8.2 [security] ([#30](https://github.com/vergissberlin/railwayapp-mjml/issues/30)) ([9f320b5](https://github.com/vergissberlin/railwayapp-mjml/commit/9f320b530f1fb0e7ea22c0d767ce97249fe0416b))
+* **deps:** update dependency express to v5.3.0 ([#28](https://github.com/vergissberlin/railwayapp-mjml/issues/28)) ([62fb7b1](https://github.com/vergissberlin/railwayapp-mjml/commit/62fb7b15cd9c9ce476f5d8b6bda179a8cb805488))
+* **deps:** update dependency express-rate-limit to v8.7.1 ([#24](https://github.com/vergissberlin/railwayapp-mjml/issues/24)) ([56dcef3](https://github.com/vergissberlin/railwayapp-mjml/commit/56dcef310669ce065a9676944f347de02f8778f2))
+* **deps:** update dependency mjml to v5.4.1 ([#26](https://github.com/vergissberlin/railwayapp-mjml/issues/26)) ([ce6a8ca](https://github.com/vergissberlin/railwayapp-mjml/commit/ce6a8ca74d2a31234852abb733c3f650cf0e8dca))
+* **deps:** update node.js to v26 ([#31](https://github.com/vergissberlin/railwayapp-mjml/issues/31)) ([12b66ec](https://github.com/vergissberlin/railwayapp-mjml/commit/12b66ec49f00f44e837969f2e52e264231cb8a0e))
+* **deps:** update pnpm to v12 ([#25](https://github.com/vergissberlin/railwayapp-mjml/issues/25)) ([eb50c45](https://github.com/vergissberlin/railwayapp-mjml/commit/eb50c457e9e142e1633e476efcea9666f52d6d9f))
+* **deps:** update pnpm to v12.16.1 ([#35](https://github.com/vergissberlin/railwayapp-mjml/issues/35)) ([ae3fc5d](https://github.com/vergissberlin/railwayapp-mjml/commit/ae3fc5dae6ff8717f2698446351054a020c3a195))
+
 ## [1.1.3](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.2...railwayapp-mjml-v1.1.3) (2026-08-20)
 
 
