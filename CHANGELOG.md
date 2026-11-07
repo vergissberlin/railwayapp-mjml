@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.6](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.5...railwayapp-mjml-v1.1.6) (2026-11-07)
+
+
+### Chores
+
+* **deps:** update dependency express-rate-limit to v8.7.3 ([3ba0a17](https://github.com/vergissberlin/railwayapp-mjml/commit/3ba0a176965d4853d4ccf9ab3879e55390167e72))
+* **deps:** update pnpm to v12.18.0 ([7d57a3b](https://github.com/vergissberlin/railwayapp-mjml/commit/7d57a3b4c36bf3ea58060aa1b162ea0c52363dd7))
+
 ## [1.1.5](https://github.com/vergissberlin/railwayapp-mjml/compare/railwayapp-mjml-v1.1.4...railwayapp-mjml-v1.1.5) (2026-10-30)
 
 
